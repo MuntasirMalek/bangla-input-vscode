@@ -1,0 +1,77 @@
+{
+  "name": "bangla-input",
+  "displayName": "Bangla Input - বাংলা ইনপুট",
+  "description": "Fast Banglish to Bengali transliteration with Google API suggestions",
+  "version": "2.4.0",
+  "publisher": "utsho",
+  "author": {
+    "name": "Utsho"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/bangla-input-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/bangla-input-vscode/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/bangla-input-vscode#readme",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Keymaps"
+  ],
+  "keywords": [
+    "bengali",
+    "bangla",
+    "banglish",
+    "transliteration",
+    "phonetic",
+    "input",
+    "বাংলা",
+    "avro"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "banglaInput.toggle",
+        "title": "Bangla Input: Toggle ON/OFF"
+      },
+      {
+        "command": "banglaInput.convert",
+        "title": "Bangla Input: Show Suggestions"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "banglaInput.toggle",
+        "key": "alt+g",
+        "mac": "alt+g"
+      },
+      {
+        "command": "banglaInput.convert",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+g",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0"
+  },
+  "dependencies": {}
+}

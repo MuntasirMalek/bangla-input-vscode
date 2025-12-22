@@ -1,0 +1,8 @@
+.vscode/**
+.vscode-test/**
+.gitignore
+*.vsix
+node_modules/**
+!node_modules/google-input-tool/**
+.DS_Store
+*.log
