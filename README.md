@@ -14,18 +14,31 @@ Fast, accurate Banglish to Bengali transliteration for VS Code with Google API s
 
 ## Installation
 
-### From VSIX (Recommended)
-1. Download the latest `.vsix` file from [Releases](../../releases)
-2. Open VS Code
-3. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
-4. Type "Install from VSIX" and select the downloaded file
+### Method 1: Download VSIX (Easiest)
 
-### From Source
+1. Go to [Releases](https://github.com/MuntasirMalek/bangla-input-vscode/releases)
+2. Download the latest `bangla-input-x.x.x.vsix` file
+3. Open VS Code
+4. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+5. Type **"Install from VSIX"** and press Enter
+6. Select the downloaded `.vsix` file
+7. Reload VS Code when prompted
+
+### Method 2: Build from Source
+
 ```bash
-git clone https://github.com/YOUR_USERNAME/bangla-input-vscode.git
+# Clone the repository
+git clone https://github.com/MuntasirMalek/bangla-input-vscode.git
 cd bangla-input-vscode
+
+# Install dependencies
 npm install
-npm run package
+
+# Package the extension
+npm install -g @vscode/vsce
+vsce package
+
+# Install in VS Code
 code --install-extension bangla-input-*.vsix
 ```
 
@@ -33,16 +46,18 @@ code --install-extension bangla-input-*.vsix
 
 ### Keyboard Shortcuts
 
-| Shortcut | Mac | Action |
-|----------|-----|--------|
-| Toggle ON/OFF | `⌥G` (Option+G) | Enable/disable Bangla input |
-| Show Suggestions | `⌘G` (Cmd+G) | Show 5 transliteration options |
+| Action | Mac | Windows/Linux |
+|--------|-----|---------------|
+| Toggle ON/OFF | `⌥G` (Option+G) | `Alt+G` |
+| Show 5 Suggestions | `⌘G` (Cmd+G) | `Ctrl+Shift+G` |
 
 ### How to Use
 
-1. **Enable**: Press `Option+G` → Status bar shows "বাংলা ON"
+1. **Enable**: Press `Option+G` (Mac) or `Alt+G` (Windows) → Status bar shows "বাংলা ON"
 2. **Type**: Write in Banglish (e.g., `ami bangla likhchi`)
-3. **Convert**: Press `Space` to auto-convert, or `Cmd+G` for suggestions
+3. **Convert**: 
+   - Press `Space` to auto-convert with first suggestion
+   - Or press `Cmd+G` / `Ctrl+Shift+G` to see all 5 suggestions and pick one
 
 ### Examples
 
@@ -65,23 +80,18 @@ code --install-extension bangla-input-*.vsix
 
 Based on Avro Keyboard patterns:
 
-| English | Bengali |
-|---------|---------|
-| kh | খ |
-| gh | ঘ |
-| ch | ছ |
-| jh | ঝ |
-| th | থ |
-| dh | ধ |
-| ph | ফ |
-| bh | ভ |
-| sh | শ |
-| ng | ং |
+| English | Bengali | English | Bengali |
+|---------|---------|---------|---------|
+| kh | খ | sh | শ |
+| gh | ঘ | ng | ং |
+| ch | ছ | th | থ |
+| jh | ঝ | dh | ধ |
+| ph | ফ | bh | ভ |
 
 ## Requirements
 
 - VS Code 1.74 or higher
-- Internet connection (for Google API suggestions)
+- Internet connection (for Google API suggestions, works offline with fallback)
 
 ## Contributing
 
@@ -115,7 +125,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-If you find any words that don't transliterate correctly, please [open an issue](../../issues) with:
+If you find any words that don't transliterate correctly, please [open an issue](https://github.com/MuntasirMalek/bangla-input-vscode/issues) with:
 - The word you typed
 - What you expected
 - What you got
