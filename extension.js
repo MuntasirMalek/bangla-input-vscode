@@ -2,10 +2,14 @@ const vscode = require('vscode');
 const https = require('https');
 const { transliterate } = require('./transliterate');
 
-let isEnabled = false;
+let isEnabled = false;      // Bangla input mode ON/OFF
+let manualMode = false;     // Manual mode (no auto-correct on space)
 let statusBarItem;
-let pendingWord = '';
-let pendingRange = null;
+
+// Bengali punctuation mappings
+const PUNCTUATION_MAP = {
+    '.': '।',   // dari
+};
 
 /**
  * Get suggestions from Google Transliteration API
@@ -52,9 +56,17 @@ function getGoogleSuggestions(text) {
 }
 
 /**
- * Show QuickPick with suggestions
+ * Show QuickPick with suggestions and number key shortcuts
  */
 async function showSuggestions(editor, word, wordRange) {
+    // Check for punctuation first - direct replace, no picker needed
+    if (PUNCTUATION_MAP[word]) {
+        await editor.edit(editBuilder => {
+            editBuilder.replace(wordRange, PUNCTUATION_MAP[word]);
+        });
+        return;
+    }
+
     const suggestions = await getGoogleSuggestions(word);
 
     let items = [];
@@ -62,8 +74,8 @@ async function showSuggestions(editor, word, wordRange) {
     if (suggestions && suggestions.length > 0) {
         items = suggestions.map((s, i) => ({
             label: s,
-            description: `Google #${i + 1}`,
-            picked: i === 0
+            description: `[${i + 1}] Google`,
+            index: i
         }));
     } else {
         // Fallback to offline
@@ -71,8 +83,8 @@ async function showSuggestions(editor, word, wordRange) {
         if (offline !== word) {
             items = [{
                 label: offline,
-                description: '(offline)',
-                picked: true
+                description: '[1] offline',
+                index: 0
             }];
         }
     }
@@ -87,17 +99,43 @@ async function showSuggestions(editor, word, wordRange) {
         return;
     }
 
-    // Show QuickPick for multiple suggestions
-    const selected = await vscode.window.showQuickPick(items, {
-        placeHolder: `Select Bengali for "${word}"`,
-        title: 'বাংলা Suggestions'
-    });
+    // Show QuickPick with number key support
+    const quickPick = vscode.window.createQuickPick();
+    quickPick.items = items;
+    quickPick.placeholder = `Select Bengali for "${word}" (press 1-${items.length} or Enter)`;
+    quickPick.title = 'বাংলা Suggestions';
 
-    if (selected) {
-        await editor.edit(editBuilder => {
-            editBuilder.replace(wordRange, selected.label);
+    return new Promise((resolve) => {
+        // Handle number key selection
+        quickPick.onDidChangeValue((value) => {
+            const num = parseInt(value);
+            if (num >= 1 && num <= items.length) {
+                editor.edit(editBuilder => {
+                    editBuilder.replace(wordRange, items[num - 1].label);
+                });
+                quickPick.hide();
+                resolve();
+            }
         });
-    }
+
+        quickPick.onDidAccept(() => {
+            const selected = quickPick.selectedItems[0];
+            if (selected) {
+                editor.edit(editBuilder => {
+                    editBuilder.replace(wordRange, selected.label);
+                });
+            }
+            quickPick.hide();
+            resolve();
+        });
+
+        quickPick.onDidHide(() => {
+            quickPick.dispose();
+            resolve();
+        });
+
+        quickPick.show();
+    });
 }
 
 /**
@@ -113,7 +151,7 @@ function activate(context) {
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    // Register toggle command
+    // Register toggle command (Alt+G / Option+G) - Toggle Bangla input ON/OFF
     let toggleCommand = vscode.commands.registerCommand('banglaInput.toggle', () => {
         isEnabled = !isEnabled;
         updateStatusBar();
@@ -121,40 +159,62 @@ function activate(context) {
     });
     context.subscriptions.push(toggleCommand);
 
-    // Register convert command - converts word before cursor with suggestions
-    let convertCommand = vscode.commands.registerCommand('banglaInput.convert', async () => {
-        if (!isEnabled) {
-            vscode.window.showWarningMessage('Bangla Input is OFF. Press Ctrl+Alt+B to enable.');
-            return;
-        }
+    // Register manual mode toggle command (Option+Shift+G) - Toggle auto-correct ON/OFF
+    let manualModeCommand = vscode.commands.registerCommand('banglaInput.toggleManualMode', () => {
+        manualMode = !manualMode;
+        updateStatusBar();
+        vscode.window.showInformationMessage(`Auto-correct: ${manualMode ? 'OFF (Manual Mode)' : 'ON'}`);
+    });
+    context.subscriptions.push(manualModeCommand);
 
+    // Register convert command (Cmd+G) - converts selected text or word before cursor with suggestions
+    let convertCommand = vscode.commands.registerCommand('banglaInput.convert', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
 
-        const position = editor.selection.active;
-        const line = editor.document.lineAt(position.line);
-        const textBeforeCursor = line.text.substring(0, position.character);
-        const match = textBeforeCursor.match(/[a-zA-Z0-9]+$/);
+        const selection = editor.selection;
+        let word, wordRange;
 
-        if (!match) {
-            vscode.window.showInformationMessage('No English word found before cursor');
-            return;
+        // Check if there's a selection
+        if (!selection.isEmpty) {
+            // Use selected text
+            word = editor.document.getText(selection);
+            wordRange = selection;
+        } else {
+            // Fallback: get word before cursor
+            const position = editor.selection.active;
+            const line = editor.document.lineAt(position.line);
+            const textBeforeCursor = line.text.substring(0, position.character);
+            // Match English words OR punctuation (dot for dari)
+            const match = textBeforeCursor.match(/[a-zA-Z0-9]+$/) || textBeforeCursor.match(/[.]$/);
+
+            if (!match) {
+                vscode.window.showInformationMessage('No English text selected or found before cursor');
+                return;
+            }
+
+            word = match[0];
+            const wordStart = position.character - word.length;
+            wordRange = new vscode.Range(
+                position.line, wordStart,
+                position.line, position.character
+            );
         }
 
-        const word = match[0];
-        const wordStart = position.character - word.length;
-        const wordRange = new vscode.Range(
-            position.line, wordStart,
-            position.line, position.character
-        );
+        // Allow punctuation or English/Banglish text
+        if (!/[a-zA-Z]/.test(word) && !PUNCTUATION_MAP[word]) {
+            vscode.window.showInformationMessage('Selected text does not contain English characters');
+            return;
+        }
 
         await showSuggestions(editor, word, wordRange);
     });
     context.subscriptions.push(convertCommand);
 
-    // Type interception for auto-convert on space
+    // Type interception for auto-convert on space (only when enabled and not in manual mode)
     let typeDisposable = vscode.commands.registerCommand('type', async (args) => {
-        if (!isEnabled) {
+        // Pass through if Bangla input is OFF or in manual mode
+        if (!isEnabled || manualMode) {
             await vscode.commands.executeCommand('default:type', args);
             return;
         }
@@ -167,7 +227,13 @@ function activate(context) {
 
         const char = args.text;
 
-        // On space/enter/punctuation, convert word and show suggestions
+        // Auto-convert dot to dari immediately
+        if (char === '.') {
+            await vscode.commands.executeCommand('default:type', { text: '।' });
+            return;
+        }
+
+        // On space/enter, auto-convert word with Google API (better accuracy)
         if (char === ' ' || char === '\n') {
             const position = editor.selection.active;
             const line = editor.document.lineAt(position.line);
@@ -182,14 +248,14 @@ function activate(context) {
                     position.line, position.character
                 );
 
-                // Get first Google suggestion and replace
+                // Use Google API for better accuracy
                 const suggestions = await getGoogleSuggestions(word);
                 if (suggestions && suggestions.length > 0) {
                     await editor.edit(editBuilder => {
                         editBuilder.replace(wordRange, suggestions[0]);
                     });
                 } else {
-                    // Fallback to offline
+                    // Fallback to offline only if Google fails
                     const offline = transliterate(word);
                     if (offline !== word) {
                         await editor.edit(editBuilder => {
@@ -214,12 +280,18 @@ function activate(context) {
  */
 function updateStatusBar() {
     if (isEnabled) {
-        statusBarItem.text = '$(globe) বাংলা ON';
-        statusBarItem.tooltip = 'Bangla Input ON - Ctrl+. for suggestions';
-        statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+        if (manualMode) {
+            statusBarItem.text = '$(globe) বাংলা MANUAL';
+            statusBarItem.tooltip = 'Bangla Input ON (Manual Mode) - Use Cmd+G to convert';
+            statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
+        } else {
+            statusBarItem.text = '$(globe) বাংলা AUTO';
+            statusBarItem.tooltip = 'Bangla Input ON (Auto-correct) - Space to convert';
+            statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+        }
     } else {
         statusBarItem.text = '$(globe) বাংলা OFF';
-        statusBarItem.tooltip = 'Bangla Input OFF - Click to enable';
+        statusBarItem.tooltip = 'Bangla Input OFF - Click or press Alt+G to enable';
         statusBarItem.backgroundColor = undefined;
     }
 }

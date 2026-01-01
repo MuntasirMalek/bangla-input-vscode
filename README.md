@@ -9,8 +9,11 @@ Fast, accurate Banglish to Bengali transliteration for VS Code with Google API s
 ✅ **Google API Suggestions** - Accurate transliteration like Chrome extension  
 ✅ **5 Suggestions Popup** - Pick the right word from multiple options  
 ✅ **Auto-Convert on Space** - Type naturally, converts automatically  
+✅ **Manual Mode** - Type in English first, convert when ready (for fast typers)  
+✅ **Number Key Selection** - Press 1-5 to quickly pick suggestions  
+✅ **Dari Support** - Dot (`.`) automatically converts to Bengali dari (`।`)  
 ✅ **Offline Fallback** - Works without internet using local dictionary  
-✅ **200+ Word Dictionary** - Common Bengali words for quick conversion  
+✅ **600+ Word Dictionary** - Common Bengali words for instant conversion  
 
 ## Installation
 
@@ -42,24 +45,45 @@ vsce package
 code --install-extension bangla-input-*.vsix
 ```
 
-## Usage
+## Keyboard Shortcuts
 
-### Keyboard Shortcuts
+| Action | Mac | Windows/Linux | Description |
+|--------|-----|---------------|-------------|
+| **Toggle ON/OFF** | `Option+G` | `Alt+G` | Enable/disable Bangla input |
+| **Toggle Manual Mode** | `Option+Shift+G` | `Alt+Shift+G` | Switch between AUTO and MANUAL mode |
+| **Show Suggestions** | `Cmd+G` | `Ctrl+Shift+G` | Show 5 Google suggestions for selected text or word before cursor |
+| **Quick Select** | `1` - `5` | `1` - `5` | Press number key to select suggestion from popup |
 
-| Action | Mac | Windows/Linux |
-|--------|-----|---------------|
-| Toggle ON/OFF | `⌥G` (Option+G) | `Alt+G` |
-| Show 5 Suggestions | `⌘G` (Cmd+G) | `Ctrl+Shift+G` |
+## Two Modes of Operation
 
-### How to Use
+### 🔄 AUTO Mode (Default)
+Best for slow/careful typing. Words convert automatically when you press Space.
 
-1. **Enable**: Press `Option+G` (Mac) or `Alt+G` (Windows) → Status bar shows "বাংলা ON"
-2. **Type**: Write in Banglish (e.g., `ami bangla likhchi`)
-3. **Convert**: 
-   - Press `Space` to auto-convert with first suggestion
-   - Or press `Cmd+G` / `Ctrl+Shift+G` to see all 5 suggestions and pick one
+1. Press `Option+G` to enable → Status bar shows **"বাংলা AUTO"**
+2. Type in Banglish: `ami bangla likhchi`
+3. Press `Space` → automatically converts to: `আমি বাংলা লিখছি`
+4. Dot (`.`) automatically becomes dari (`।`)
 
-### Examples
+> ⚠️ **Note:** If you type very fast, some words may not convert properly due to network latency. Use Manual Mode for fast typing.
+
+### ✋ MANUAL Mode
+Best for fast typing. Type everything in English, then convert when ready.
+
+1. Press `Option+G` to enable Bangla input
+2. Press `Option+Shift+G` to switch to Manual Mode → Status bar shows **"বাংলা MANUAL"**
+3. Type freely in Banglish at any speed
+4. **Select your text** and press `Cmd+G` to convert
+5. Pick from 5 Google suggestions (or press 1-5 for quick selection)
+
+## Status Bar Indicator
+
+| Status | Meaning |
+|--------|---------|
+| **বাংলা OFF** | Extension disabled - normal English typing |
+| **বাংলা AUTO** | Auto-convert mode - converts on Space |
+| **বাংলা MANUAL** | Manual mode - use Cmd+G to convert |
+
+## Examples
 
 | You type | You get |
 |----------|---------|
@@ -68,13 +92,15 @@ code --install-extension bangla-input-*.vsix
 | bangla | বাংলা |
 | kemon acho | কেমন আছো |
 | dhonnobad | ধন্যবাদ |
-| joigo | যৌগ (via Google API) |
+| bangladeshke | বাংলাদেশকে |
+| hello | হ্যালো |
+| . | । (dari) |
 
 ## How It Works
 
 1. **Google API First** - Fetches accurate suggestions from Google Input Tools
 2. **Offline Fallback** - Uses local phonetic rules if API fails
-3. **Smart Dictionary** - 200+ common words for instant conversion
+3. **Smart Dictionary** - 600+ common words for instant conversion
 
 ## Phonetic Rules
 
