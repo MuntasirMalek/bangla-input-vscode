@@ -16,17 +16,17 @@ Fast, accurate Banglish to Bengali transliteration for VS Code with Google API s
 
 ## Installation
 
-### Method 1: Download VSIX (Easiest)
+### ⬇️ [Download Latest VSIX](https://github.com/MuntasirMalek/bangla-input-vscode/releases/latest)
 
-1. Go to [Releases](https://github.com/MuntasirMalek/bangla-input-vscode/releases)
-2. Download the latest `bangla-input-x.x.x.vsix` file
-3. Open VS Code
-4. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
-5. Type **"Install from VSIX"** and press Enter
-6. Select the downloaded `.vsix` file
-7. Reload VS Code when prompted
+1. Click the button above → Download `bangla-input-x.x.x.vsix`
+2. Open VS Code
+3. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+4. Type **"Install from VSIX"** and press Enter
+5. Select the downloaded `.vsix` file
+6. Reload VS Code when prompted
 
-### Method 2: Build from Source
+<details>
+<summary>🔧 Build from Source (Advanced)</summary>
 
 ```bash
 # Clone the repository
@@ -43,6 +43,8 @@ vsce package
 # Install in VS Code
 code --install-extension bangla-input-*.vsix
 ```
+
+</details>
 
 ## Keyboard Shortcuts
 
