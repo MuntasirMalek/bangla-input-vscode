@@ -48,8 +48,8 @@ code --install-extension bangla-input-*.vsix
 
 | Action | Mac | Windows/Linux | Description |
 |--------|-----|---------------|-------------|
-| **Convert** | `Cmd+G` | `Ctrl+Shift+G` | Convert selected text or word before cursor to Bengali |
-| **Toggle Auto Mode** | `Cmd+Shift+G` | `Ctrl+Alt+G` | Switch between Manual and Auto-correct mode |
+| **Convert** | `Option+G` | `Alt+G` | Convert selected text or word before cursor to Bengali |
+| **Toggle Auto Mode** | `Option+Shift+G` | `Alt+Shift+G` | Switch between Manual and Auto-correct mode |
 | **To Select - Press** | `1` - `5` | `1` - `5` | Press number key to select suggestion from popup |
 
 ## How to Use
@@ -59,23 +59,23 @@ The extension is **always ON** and ready to convert. Just type in Banglish and c
 
 1. Type in Banglish: `ami bangla likhchi`
 2. Select the text (or just place cursor after a word)
-3. Press `Cmd+G` → Pick from 5 Google suggestions
+3. Press `Option+G` → Pick from 5 Google suggestions
 4. Or press `1-5` to quickly select a suggestion
 
 ### Optional: Auto-correct Mode
 For automatic conversion on Space (may miss words when typing fast).
 
-1. Press `Cmd+Shift+G` to enable → Status bar shows **"বাংলা AUTO"**
+1. Press `Option+Shift+G` to enable → Status bar shows **"বাংলা AUTO"**
 2. Type in Banglish: `ami bangla likhchi`
 3. Press `Space` → automatically converts each word
 4. Dot (`.`) automatically becomes dari (`।`)
-5. Press `Cmd+Shift+G` again to go back to Manual mode
+5. Press `Option+Shift+G` again to go back to Manual mode
 
 ## Status Bar Indicator
 
 | Status | Meaning |
 |--------|---------|
-| **বাংলা** | Manual mode - use Cmd+G to convert |
+| **বাংলা** | Manual mode - use Option+G to convert |
 | **বাংলা AUTO** | Auto-correct mode - converts on Space |
 
 ## Examples

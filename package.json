@@ -2,7 +2,7 @@
   "name": "bangla-input",
   "displayName": "Bangla Input - বাংলা ইনপুট",
   "description": "Fast Banglish to Bengali transliteration with Google API suggestions",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "publisher": "utsho",
   "author": {
     "name": "Utsho"
@@ -56,14 +56,14 @@
     "keybindings": [
       {
         "command": "banglaInput.convert",
-        "key": "ctrl+shift+g",
-        "mac": "cmd+g",
+        "key": "alt+g",
+        "mac": "alt+g",
         "when": "editorTextFocus"
       },
       {
         "command": "banglaInput.toggleAutoMode",
-        "key": "ctrl+alt+g",
-        "mac": "cmd+shift+g",
+        "key": "alt+shift+g",
+        "mac": "alt+shift+g",
         "when": "editorTextFocus"
       }
     ]

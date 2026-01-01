@@ -276,7 +276,7 @@ function updateStatusBar() {
         statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
     } else {
         statusBarItem.text = '$(globe) বাংলা';
-        statusBarItem.tooltip = 'Bangla Input - Use Cmd+G to convert. Click to enable Auto-correct.';
+        statusBarItem.tooltip = 'Bangla Input - Use Option+G to convert. Click to enable Auto-correct.';
         statusBarItem.backgroundColor = undefined;
     }
 }
