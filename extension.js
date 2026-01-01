@@ -2,8 +2,7 @@ const vscode = require('vscode');
 const https = require('https');
 const { transliterate } = require('./transliterate');
 
-let isEnabled = false;      // Bangla input mode ON/OFF
-let manualMode = false;     // Manual mode (no auto-correct on space)
+let autoMode = false;  // Auto-correct mode (off by default, manual mode)
 let statusBarItem;
 
 // Bengali punctuation mappings
@@ -146,26 +145,18 @@ function activate(context) {
 
     // Create status bar item
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'banglaInput.toggle';
+    statusBarItem.command = 'banglaInput.toggleAutoMode';
     updateStatusBar();
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    // Register toggle command (Alt+G / Option+G) - Toggle Bangla input ON/OFF
-    let toggleCommand = vscode.commands.registerCommand('banglaInput.toggle', () => {
-        isEnabled = !isEnabled;
+    // Register auto mode toggle command (Cmd+Shift+G) - Toggle auto-correct ON/OFF
+    let toggleAutoModeCommand = vscode.commands.registerCommand('banglaInput.toggleAutoMode', () => {
+        autoMode = !autoMode;
         updateStatusBar();
-        vscode.window.showInformationMessage(`Bangla Input: ${isEnabled ? 'ON ✓' : 'OFF'}`);
+        vscode.window.showInformationMessage(`Bangla Auto-correct: ${autoMode ? 'ON (converts on Space)' : 'OFF (use Cmd+G)'}`);
     });
-    context.subscriptions.push(toggleCommand);
-
-    // Register manual mode toggle command (Option+Shift+G) - Toggle auto-correct ON/OFF
-    let manualModeCommand = vscode.commands.registerCommand('banglaInput.toggleManualMode', () => {
-        manualMode = !manualMode;
-        updateStatusBar();
-        vscode.window.showInformationMessage(`Auto-correct: ${manualMode ? 'OFF (Manual Mode)' : 'ON'}`);
-    });
-    context.subscriptions.push(manualModeCommand);
+    context.subscriptions.push(toggleAutoModeCommand);
 
     // Register convert command (Cmd+G) - converts selected text or word before cursor with suggestions
     let convertCommand = vscode.commands.registerCommand('banglaInput.convert', async () => {
@@ -211,10 +202,10 @@ function activate(context) {
     });
     context.subscriptions.push(convertCommand);
 
-    // Type interception for auto-convert on space (only when enabled and not in manual mode)
+    // Type interception for auto-convert on space (only when auto mode is ON)
     let typeDisposable = vscode.commands.registerCommand('type', async (args) => {
-        // Pass through if Bangla input is OFF or in manual mode
-        if (!isEnabled || manualMode) {
+        // Pass through if auto mode is OFF
+        if (!autoMode) {
             await vscode.commands.executeCommand('default:type', args);
             return;
         }
@@ -279,19 +270,13 @@ function activate(context) {
  * Update status bar
  */
 function updateStatusBar() {
-    if (isEnabled) {
-        if (manualMode) {
-            statusBarItem.text = '$(globe) বাংলা MANUAL';
-            statusBarItem.tooltip = 'Bangla Input ON (Manual Mode) - Use Cmd+G to convert';
-            statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
-        } else {
-            statusBarItem.text = '$(globe) বাংলা AUTO';
-            statusBarItem.tooltip = 'Bangla Input ON (Auto-correct) - Space to convert';
-            statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
-        }
+    if (autoMode) {
+        statusBarItem.text = '$(globe) বাংলা AUTO';
+        statusBarItem.tooltip = 'Bangla Auto-correct ON - Space to convert. Click to switch to Manual.';
+        statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
     } else {
-        statusBarItem.text = '$(globe) বাংলা OFF';
-        statusBarItem.tooltip = 'Bangla Input OFF - Click or press Alt+G to enable';
+        statusBarItem.text = '$(globe) বাংলা';
+        statusBarItem.tooltip = 'Bangla Input - Use Cmd+G to convert. Click to enable Auto-correct.';
         statusBarItem.backgroundColor = undefined;
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "bangla-input",
   "displayName": "Bangla Input - বাংলা ইনপুট",
-  "description": "Fast Banglish to Bengali transliteration with Google API suggestions and manual mode",
+  "description": "Fast Banglish to Bengali transliteration with Google API suggestions",
   "version": "2.5.0",
   "publisher": "utsho",
   "author": {
@@ -45,33 +45,25 @@
   "contributes": {
     "commands": [
       {
-        "command": "banglaInput.toggle",
-        "title": "Bangla Input: Toggle ON/OFF"
-      },
-      {
-        "command": "banglaInput.toggleManualMode",
-        "title": "Bangla Input: Toggle Manual Mode (No Auto-correct)"
-      },
-      {
         "command": "banglaInput.convert",
-        "title": "Bangla Input: Show Suggestions"
+        "title": "Bangla Input: Convert to Bengali"
+      },
+      {
+        "command": "banglaInput.toggleAutoMode",
+        "title": "Bangla Input: Toggle Auto-correct Mode"
       }
     ],
     "keybindings": [
       {
-        "command": "banglaInput.toggle",
-        "key": "alt+g",
-        "mac": "alt+g"
-      },
-      {
-        "command": "banglaInput.toggleManualMode",
-        "key": "alt+shift+g",
-        "mac": "alt+shift+g"
-      },
-      {
         "command": "banglaInput.convert",
         "key": "ctrl+shift+g",
         "mac": "cmd+g",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "banglaInput.toggleAutoMode",
+        "key": "ctrl+alt+g",
+        "mac": "cmd+shift+g",
         "when": "editorTextFocus"
       }
     ]
