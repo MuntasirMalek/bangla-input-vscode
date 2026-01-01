@@ -154,7 +154,7 @@ function activate(context) {
     let toggleAutoModeCommand = vscode.commands.registerCommand('banglaInput.toggleAutoMode', () => {
         autoMode = !autoMode;
         updateStatusBar();
-        vscode.window.showInformationMessage(`Bangla Auto-correct: ${autoMode ? 'ON (converts on Space)' : 'OFF (use Cmd+G)'}`);
+        vscode.window.showInformationMessage(`Bangla Auto-correct: ${autoMode ? 'ON (converts on Space)' : 'OFF (use Option+G)'}`);
     });
     context.subscriptions.push(toggleAutoModeCommand);
 

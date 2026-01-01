@@ -2,7 +2,7 @@
   "name": "bangla-input",
   "displayName": "Bangla Input - বাংলা ইনপুট",
   "description": "Fast Banglish to Bengali transliteration with Google API suggestions",
-  "version": "2.6.0",
+  "version": "1.0.0",
   "publisher": "utsho",
   "author": {
     "name": "Utsho"
