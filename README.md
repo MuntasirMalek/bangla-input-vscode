@@ -52,7 +52,7 @@ code --install-extension bangla-input-*.vsix
 | **Toggle ON/OFF** | `Option+G` | `Alt+G` | Enable/disable Bangla input |
 | **Toggle Manual Mode** | `Option+Shift+G` | `Alt+Shift+G` | Switch between AUTO and MANUAL mode |
 | **Show Suggestions** | `Cmd+G` | `Ctrl+Shift+G` | Show 5 Google suggestions for selected text or word before cursor |
-| **Quick Select** | `1` - `5` | `1` - `5` | Press number key to select suggestion from popup |
+| **Select Press** | `1` - `5` | `1` - `5` | Press number key to select suggestion from popup |
 
 ## Two Modes of Operation
 
