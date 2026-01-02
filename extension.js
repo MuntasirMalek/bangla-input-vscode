@@ -10,6 +10,19 @@ const PUNCTUATION_MAP = {
     '.': '।',   // dari
 };
 
+// Bengali number mappings
+const BENGALI_NUMBERS = {
+    '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+    '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
+};
+
+/**
+ * Convert English numbers to Bengali numbers
+ */
+function toBengaliNumbers(str) {
+    return str.replace(/[0-9]/g, d => BENGALI_NUMBERS[d]);
+}
+
 /**
  * Get suggestions from Google Transliteration API
  */
@@ -190,6 +203,15 @@ function activate(context) {
                 position.line, wordStart,
                 position.line, position.character
             );
+        }
+
+        // Check if it's pure numbers - convert to Bengali numbers directly
+        if (/^[0-9]+$/.test(word)) {
+            const bengaliNum = toBengaliNumbers(word);
+            await editor.edit(editBuilder => {
+                editBuilder.replace(wordRange, bengaliNum);
+            });
+            return;
         }
 
         // Allow punctuation or English/Banglish text
