@@ -56,14 +56,14 @@
     "keybindings": [
       {
         "command": "banglaInput.convert",
-        "key": "alt+g",
-        "mac": "alt+g",
+        "key": "alt+b",
+        "mac": "alt+b",
         "when": "editorTextFocus"
       },
       {
         "command": "banglaInput.toggleAutoMode",
-        "key": "alt+shift+g",
-        "mac": "alt+shift+g",
+        "key": "alt+shift+b",
+        "mac": "alt+shift+b",
         "when": "editorTextFocus"
       }
     ]
